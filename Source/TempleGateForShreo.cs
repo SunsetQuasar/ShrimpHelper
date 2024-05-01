@@ -29,6 +29,7 @@ namespace Celeste.Mod.ShrimpHelper.Entities
 
 		public ShreoGate(EntityData data, Vector2 offset) : base(data.Position + offset, data.Width, data.Height, true)
         {
+			SurfaceSoundIndex = 11;
 			open = false;
 			opacity = 0.9f;
 			Depth = -5000;
@@ -58,10 +59,10 @@ namespace Celeste.Mod.ShrimpHelper.Entities
 
             if (open)
             {
-				opacity = Calc.Approach(opacity, 0.3f, Engine.DeltaTime * 4);
+				opacity = Calc.Approach(opacity, 0, Engine.DeltaTime * 4);
             } else
             {
-				opacity = Calc.Approach(opacity, 0.9f, Engine.DeltaTime * 4);
+				opacity = Calc.Approach(opacity, 1, Engine.DeltaTime * 4);
 			}
 			for (int i = 0; i < dust.Length; i++)
 			{
@@ -78,13 +79,21 @@ namespace Celeste.Mod.ShrimpHelper.Entities
         public override void Render()
         {
             base.Render();
-			Draw.Rect(X, Y, Width, Height, Calc.HexToColor("FFFFCC") * opacity);
+
+			float opacity2 = Calc.ClampedMap(Ease.CubeInOut(opacity), 0, 1, 0.3f, 0.9f);
+
+			Color barrier = Calc.HexToColor("BBBB77") * opacity2;
+			barrier.A /= 3;
+            Draw.Rect(X, Y, Width, Height, barrier);
+			Color dustColor;
 			for (int i = 0; i < dust.Length; i++)
 			{
-				Draw.Rect(dust[i].Position, 1, 1, Calc.HexToColor("FFFFFF") * (float)Math.Sin(dust[i].percent * Math.PI));
+				dustColor = Calc.HexToColor("FFFFFF") * (float)Math.Sin(dust[i].percent * Math.PI);
+				dustColor.A = 0;
+                Draw.Rect(dust[i].Position, 1, 1, dustColor);
 			}
 			MTexture tex = GFX.Game["characters/theoCrystal/SC2023/shrimphelper/gateIcon"];
-			tex.DrawCentered(Position + new Vector2(base.Width / 2f, Height / 2), Color.White * opacity);
+			tex.DrawCentered(Position + new Vector2(base.Width / 2f, Height / 2), Color.White * opacity2);
 		}
 
         public bool TheoIsNearby()
