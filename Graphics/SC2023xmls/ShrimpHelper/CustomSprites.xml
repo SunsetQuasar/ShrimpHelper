@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Sprites>
+    <sprimp path="sprimp/SC2023/ShrimpHelper/asset/" start="idle">
+        <Center/>
+        <Loop id="idle" path="idle_" delay="0.1"/>
+        <Loop id="grab" path="grab_" delay="0.1"/>
+        <Anim id="launch" path="launch_" delay="0.03" goto="idle"/>
+    </sprimp>
+    <krill path="krill/SC2023/ShrimpHelper/asset/" start="idle">
+        <Center/>
+        <Loop id="idle" path="idle_" delay="0.2"/>
+        <Loop id="idle_fall" path="idlefall_" delay="0.2"/>
+    </krill>
+</Sprites>

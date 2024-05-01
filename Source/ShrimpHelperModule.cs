@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Monocle;
+using System;
 
 namespace Celeste.Mod.ShrimpHelper;
 
@@ -14,6 +15,8 @@ public class ShrimpHelperModule : EverestModule {
     public override Type SaveDataType => typeof(ShrimpHelperModuleSaveData);
     public static ShrimpHelperModuleSaveData SaveData => (ShrimpHelperModuleSaveData) Instance._SaveData;
 
+    public static SpriteBank ShrimpSpriteBank;
+
     public ShrimpHelperModule() {
         Instance = this;
 #if DEBUG
@@ -23,6 +26,10 @@ public class ShrimpHelperModule : EverestModule {
         // release builds use info logging to reduce spam in log files
         Logger.SetLogLevel(nameof(ShrimpHelperModule), LogLevel.Info);
 #endif
+    }
+    public override void LoadContent(bool firstLoad)
+    {
+        ShrimpSpriteBank = new SpriteBank(GFX.Game, "Graphics/SC2023xmls/ShrimpHelper/CustomSprites.xml");
     }
 
     public override void Load() {

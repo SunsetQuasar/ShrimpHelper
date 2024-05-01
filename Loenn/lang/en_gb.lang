@@ -1,0 +1,13 @@
+mods.ShrimpHelper.name=Shrimp Helper
+
+entities.ShrimpHelper/BonkKrill.placements.name.right=Bonkrill (Right)
+entities.ShrimpHelper/BonkKrill.placements.name.left=Bonkrill (Left)
+entities.ShrimpHelper/BonkKrill.placements.name.rightHitOnce=Bonkrill (Right, Blue)
+entities.ShrimpHelper/BonkKrill.placements.name.leftHitOnce=Bonkrill (Left, Blue)
+
+entities.ShrimpHelper/Sprimp.placements.name.right=Sprimp (Right)
+entities.ShrimpHelper/Sprimp.placements.name.left=Sprimp (Left)
+
+entities.ShrimpHelper/Shreo.placements.name.theo_crystal=Shreo Crystal
+
+entities.ShrimpHelper/ShreoGate.placements.name.shreo_gate=Shreo Gate
