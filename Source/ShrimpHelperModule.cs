@@ -1,0 +1,35 @@
+﻿using System;
+
+namespace Celeste.Mod.ShrimpHelper;
+
+public class ShrimpHelperModule : EverestModule {
+    public static ShrimpHelperModule Instance { get; private set; }
+
+    public override Type SettingsType => typeof(ShrimpHelperModuleSettings);
+    public static ShrimpHelperModuleSettings Settings => (ShrimpHelperModuleSettings) Instance._Settings;
+
+    public override Type SessionType => typeof(ShrimpHelperModuleSession);
+    public static ShrimpHelperModuleSession Session => (ShrimpHelperModuleSession) Instance._Session;
+
+    public override Type SaveDataType => typeof(ShrimpHelperModuleSaveData);
+    public static ShrimpHelperModuleSaveData SaveData => (ShrimpHelperModuleSaveData) Instance._SaveData;
+
+    public ShrimpHelperModule() {
+        Instance = this;
+#if DEBUG
+        // debug builds use verbose logging
+        Logger.SetLogLevel(nameof(ShrimpHelperModule), LogLevel.Verbose);
+#else
+        // release builds use info logging to reduce spam in log files
+        Logger.SetLogLevel(nameof(ShrimpHelperModule), LogLevel.Info);
+#endif
+    }
+
+    public override void Load() {
+        // TODO: apply any hooks that should always be active
+    }
+
+    public override void Unload() {
+        // TODO: unapply any hooks applied in Load()
+    }
+}
