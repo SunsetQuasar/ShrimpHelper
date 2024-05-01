@@ -8,7 +8,9 @@ ShrimpHelperShreoCrystal.placements = {
     name = "theo_crystal",
     data = {
         texture = "characters/theoCrystal/SC2023/ShrimpHelper/shreo",
-        TagFix = true
+        TagFix = true,
+        removeDuplicates = true,
+        tutorial = false
     }
 }
 

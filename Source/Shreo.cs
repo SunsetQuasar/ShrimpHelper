@@ -51,6 +51,10 @@ namespace Celeste.Mod.ShrimpHelper.Entities
 
 		private bool antiGrav = false;
 
+		private bool removeDuplicates;
+
+		private bool tutorial;
+
 		public ShreoCrystal(Vector2 position)
 			: base(position)
 		{
@@ -82,21 +86,26 @@ namespace Celeste.Mod.ShrimpHelper.Entities
 			: this(e.Position + offset)
 		{
 			texture = GFX.Game[e.Attr("texture", "characters/theoCrystal/SC2023/shrimphelper/shreo")];
-			if(e.Bool("TagFix", true)) Tag = Tags.TransitionUpdate;
+			if(!e.Bool("TagFix", true)) Tag = Tags.TransitionUpdate;
+			removeDuplicates = e.Bool("removeDuplicates", true);
+			tutorial = e.Bool("tutorial", false);
         }
 
 		public override void Added(Scene scene)
 		{
 			base.Added(scene);
 			Level = SceneAs<Level>();
-			foreach (ShreoCrystal entity in Level.Tracker.GetEntities<ShreoCrystal>())
+			if (removeDuplicates)
 			{
-				if (entity != this && entity.Hold.IsHeld)
-				{
-					RemoveSelf();
-				}
-			}
-			if (Level.Session.Level == "e-00")
+                foreach (ShreoCrystal entity in Level.Tracker.GetEntities<ShreoCrystal>())
+                {
+                    if (entity != this && entity.Hold.IsHeld)
+                    {
+                        RemoveSelf();
+                    }
+                }
+            }
+			if (tutorial)
 			{
 				tutorialGui = new BirdTutorialGui(this, new Vector2(0f, -24f), Dialog.Clean("tutorial_carry"), Dialog.Clean("tutorial_hold"), BirdTutorialGui.ButtonPrompt.Grab);
 				tutorialGui.Open = false;

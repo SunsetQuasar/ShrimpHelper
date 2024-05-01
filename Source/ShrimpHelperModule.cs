@@ -1,4 +1,5 @@
-﻿using Monocle;
+﻿using Celeste.Mod.ShrimpHelper.Entities;
+using Monocle;
 using System;
 
 namespace Celeste.Mod.ShrimpHelper;
@@ -33,10 +34,10 @@ public class ShrimpHelperModule : EverestModule {
     }
 
     public override void Load() {
-        // TODO: apply any hooks that should always be active
+        BonkKrill.Load();
     }
 
     public override void Unload() {
-        // TODO: unapply any hooks applied in Load()
+        BonkKrill.Unload();
     }
 }
