@@ -13,10 +13,10 @@ namespace Celeste.Mod.ShrimpHelper.Entities
 	{
 		public enum KrillOrientations
 		{
-			Floor,
-			WallLeft,
-			WallRight,
-			Ceiling
+			Floor = 0,
+			WallLeft = 1,
+			WallRight = 2,
+			Ceiling = 3
 		}
 
 		private Sprite sprite;
@@ -38,27 +38,14 @@ namespace Celeste.Mod.ShrimpHelper.Entities
 		{
 			int ori = data.Int("orientation", 0);
 			KrillOrientations orientation = KrillOrientations.Floor;
-			if (ori == 0)
-            {
-				orientation = KrillOrientations.Floor;
-            } 
-			else if (ori == 1)
-            {
-				orientation = KrillOrientations.WallLeft;
-            } 
-			else if (ori == 2)
-            {
-				orientation = KrillOrientations.WallRight;
-            }
-			else if (ori == 3)
-			{
-				orientation = KrillOrientations.Ceiling;
-			}
+			orientation = (KrillOrientations)ori;
 			Orientation = orientation;
 			playerCanUse = data.Bool("playerCanUse", true);
 			KrillKollider krillCollider = new KrillKollider(OnKrill);
+			StarfishCollider starfishCollider = new StarfishCollider(OnStarfishGuy);
 			Add(krillCollider);
-			Add(sprite = new Sprite(GFX.Game, "objects/spring/"));
+            Add(starfishCollider);
+            Add(sprite = new Sprite(GFX.Game, "objects/spring/"));
 			sprite.Add("idle", "", 0f, default(int));
 			sprite.Add("bounce", "", 0.07f, "idle", 0, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 4, 5);
 			sprite.Add("disabled", "white", 0.07f);
@@ -88,6 +75,11 @@ namespace Celeste.Mod.ShrimpHelper.Entities
 					staticMover.JumpThruChecker = (JumpThru jt) => CollideCheck(jt, Position + Vector2.UnitX);
 					Add(staticMover);
 					break;
+                case KrillOrientations.Ceiling:
+                    staticMover.SolidChecker = (Solid s) => CollideCheck(s, Position - Vector2.UnitY);
+                    staticMover.JumpThruChecker = (JumpThru jt) => CollideCheck(jt, Position - Vector2.UnitY);
+                    Add(staticMover);
+                    break;
 			}
 			Add(wiggler = Wiggler.Create(1f, 4f, delegate (float v)
 			{
@@ -201,8 +193,15 @@ namespace Celeste.Mod.ShrimpHelper.Entities
 				BounceAnimate();
 			}
 		}
+        private void OnStarfishGuy(StarfishGuy s)
+        {
+            if (s.HitKrillSpring(this))
+            {
+                BounceAnimate();
+            }
+        }
 
-		public override void Render()
+        public override void Render()
 		{
 			if (Collidable)
 			{

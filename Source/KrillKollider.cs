@@ -2,37 +2,36 @@
 using Monocle;
 using System;
 
-namespace Celeste.Mod.ShrimpHelper.Components
+namespace Celeste.Mod.ShrimpHelper.Components;
+
+[Tracked(false)]
+public class KrillKollider : Component
 {
-	[Tracked(false)]
-	public class KrillKollider : Component
+	public Action<BonkKrill> OnCollide;
+
+	public Collider Collider;
+
+	public KrillKollider(Action<BonkKrill> onCollide, Collider collider = null)
+		: base(active: false, visible: false)
 	{
-		public Action<BonkKrill> OnCollide;
+		OnCollide = onCollide;
+		Collider = null;
+	}
 
-		public Collider Collider;
-
-		public KrillKollider(Action<BonkKrill> onCollide, Collider collider = null)
-			: base(active: false, visible: false)
+	public void Check(BonkKrill krill)
+	{
+		if (OnCollide != null)
 		{
-			OnCollide = onCollide;
-			Collider = null;
-		}
-
-		public void Check(BonkKrill krill)
-		{
-			if (OnCollide != null)
+			Collider collider = Entity.Collider;
+			if (Collider != null)
 			{
-				Collider collider = Entity.Collider;
-				if (Collider != null)
-				{
-					Entity.Collider = Collider;
-				}
-				if (krill.CollideCheck(Entity))
-				{
-					OnCollide(krill);
-				}
-				Entity.Collider = collider;
+				Entity.Collider = Collider;
 			}
+			if (krill.CollideCheck(Entity))
+			{
+				OnCollide(krill);
+			}
+			Entity.Collider = collider;
 		}
 	}
 }
