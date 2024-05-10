@@ -39,11 +39,13 @@ public class ShrimpHelperModule : EverestModule
     {
         BonkKrill.Load();
         StarfishGuy.Load();
+        PlayerExt.Load();
     }
 
     public override void Unload()
     {
         BonkKrill.Unload();
         StarfishGuy.Unload();
+        PlayerExt.Unload();
     }
 }
