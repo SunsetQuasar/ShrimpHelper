@@ -1,5 +1,8 @@
-﻿using Celeste.Mod.ShrimpHelper.Entities;
-using Monocle;
+﻿global using Microsoft.Xna.Framework;
+global using Monocle;
+global using Celeste.Mod.Entities;
+
+using Celeste.Mod.ShrimpHelper.Entities;
 using System;
 
 namespace Celeste.Mod.ShrimpHelper;
@@ -40,6 +43,7 @@ public class ShrimpHelperModule : EverestModule
         BonkKrill.Load();
         StarfishGuy.Load();
         PlayerExt.Load();
+        LeapPrawn.Load();
     }
 
     public override void Unload()
@@ -47,5 +51,6 @@ public class ShrimpHelperModule : EverestModule
         BonkKrill.Unload();
         StarfishGuy.Unload();
         PlayerExt.Unload();
+        LeapPrawn.Unload();
     }
 }
