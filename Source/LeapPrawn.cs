@@ -99,7 +99,7 @@ public class LeapPrawn : Actor
         public override void Awake(Scene scene)
         {
             base.Awake(scene);
-            MoveTo(Target(parent), parent.Speed);
+            MoveToNaive(Target(parent));
         }
 
         public override void Update()
@@ -259,9 +259,6 @@ public class LeapPrawn : Actor
 
     public override void Update()
     {
-        if (SolidChild != null) SolidChild.Collidable = false;
-
-        base.Update();
 
         Level level = Scene as Level;
 
@@ -296,14 +293,11 @@ public class LeapPrawn : Actor
         MoveH(Speed.X * Engine.DeltaTime, onCollideH);
         MoveV(Speed.Y * Engine.DeltaTime, onCollideV);
 
-        if(PlatformChild != null)
+        base.Update();
+
+        if (PlatformChild != null)
         {
             PlatformChild.MoveTo(PlatformChild.Target, Speed);
-        }
-
-        if (SolidChild != null)
-        {
-            SolidChild.MoveTo(PrawnSolid.Target(this), Speed);
         }
 
         if (SpringChild != null)
@@ -315,8 +309,6 @@ public class LeapPrawn : Actor
         {
             SpringDownChild.Position = Position;
         }
-
-        if (SolidChild != null) SolidChild.Collidable = true;
     }
     private void OnCollideH(CollisionData data)
     {
@@ -396,6 +388,41 @@ public class LeapPrawn : Actor
         On.Celeste.Player.SuperJump += Player_SuperJump;
         On.Celeste.Player.WallJump += Player_WallJump;
         On.Celeste.Player.SuperWallJump += Player_SuperWallJump;
+        On.Celeste.Actor.MoveH += Actor_MoveH;
+        On.Celeste.Actor.MoveV += Actor_MoveV;
+    }
+
+    private static bool Actor_MoveV(On.Celeste.Actor.orig_MoveV orig, Actor self, float moveV, Collision onCollide, Solid pusher)
+    {
+        LeapPrawn l = self as LeapPrawn;
+        if (l == null)
+        {
+            return orig(self, moveV, onCollide, pusher);
+        } else if (l.SolidChild != null)
+        {
+            l.SolidChild.Collidable = false;
+            bool result = orig(self, moveV, onCollide, pusher);
+            l.SolidChild.Collidable = true;
+            return result;
+        }
+        return orig(self, moveV, onCollide, pusher);
+    }
+
+    private static bool Actor_MoveH(On.Celeste.Actor.orig_MoveH orig, Actor self, float moveH, Collision onCollide, Solid pusher)
+    {
+        LeapPrawn l = self as LeapPrawn;
+        if (l == null)
+        {
+            return orig(self, moveH, onCollide, pusher);
+        }
+        else if (l.SolidChild != null)
+        {
+            l.SolidChild.Collidable = false;
+            bool result = orig(self, moveH, onCollide, pusher);
+            l.SolidChild.Collidable = true;
+            return result;
+        }
+        return orig(self, moveH, onCollide, pusher);
     }
 
     public static void Unload()
@@ -404,6 +431,8 @@ public class LeapPrawn : Actor
         On.Celeste.Player.SuperJump -= Player_SuperJump;
         On.Celeste.Player.WallJump -= Player_WallJump;
         On.Celeste.Player.SuperWallJump -= Player_SuperWallJump;
+        On.Celeste.Actor.MoveH -= Actor_MoveH;
+        On.Celeste.Actor.MoveV -= Actor_MoveV;
     }
     private static void Player_Jump(On.Celeste.Player.orig_Jump orig, Player self, bool particles, bool playSfx)
     {
