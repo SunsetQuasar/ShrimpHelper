@@ -62,59 +62,6 @@ public class LeapPrawn : Actor
         }
     }
 
-    public class PrawnSolid : Solid
-    {
-        public LeapPrawn parent;
-
-        public static Vector2 Target(LeapPrawn parent) 
-        {
-            if (parent.GravDir == new Vector2(0, 1))
-            {
-                return parent.TopLeft - (Vector2.UnitY * 8);
-            }
-            if (parent.GravDir == new Vector2(0, -1))
-            {
-                return parent.BottomLeft + (Vector2.UnitY * 2);
-            }
-            if (parent.GravDir == new Vector2(1, 0))
-            {
-                return parent.TopLeft - (Vector2.UnitX * 8);
-            }
-            return parent.TopRight + (Vector2.UnitX * 2);
-        }
-
-        public PrawnSolid(LeapPrawn parent) : base(Target(parent), 0, 0, false)
-        {
-            this.parent = parent;
-
-            if (parent.GravDir == new Vector2(1, 0) || parent.GravDir == new Vector2(-1, 0))
-            {
-                Collider = new Hitbox(6, 16);
-            } else
-            {
-                Collider = new Hitbox(16, 6);
-            }
-        }
-
-        public override void Awake(Scene scene)
-        {
-            base.Awake(scene);
-            MoveToNaive(Target(parent));
-        }
-
-        public override void Update()
-        {
-            base.Update();
-            MoveTo(Target(parent), parent.Speed);
-        }
-
-        public override void Render()
-        {
-            base.Render();
-            Draw.Rect(Collider, Color.IndianRed);
-        }
-    }
-
     public class PrawnSpring : Spring
     {
         public LeapPrawn parent;
@@ -168,14 +115,12 @@ public class LeapPrawn : Actor
         Normal = 0,
         Spiky = 1,
         Platform = 2,
-        Spring = 3,
-        Solid = 4
+        Spring = 3
     }
 
     public Types PrawnType;
 
     public PrawnPlatform PlatformChild;
-    public PrawnSolid SolidChild;
     public PrawnSpring SpringChild;
     public PrawnSpringDown SpringDownChild;
 
@@ -247,9 +192,6 @@ public class LeapPrawn : Actor
                 break;
             case Types.Platform:
                 Scene.Add(new PrawnPlatform(this));
-                break;
-            case Types.Solid:
-                Scene.Add(new PrawnSolid(this));
                 break;
             default:
                 Add(new PlayerCollider(OnPlayerSpecial, new Hitbox(16, 4, -8, -12)));
@@ -388,41 +330,6 @@ public class LeapPrawn : Actor
         On.Celeste.Player.SuperJump += Player_SuperJump;
         On.Celeste.Player.WallJump += Player_WallJump;
         On.Celeste.Player.SuperWallJump += Player_SuperWallJump;
-        On.Celeste.Actor.MoveH += Actor_MoveH;
-        On.Celeste.Actor.MoveV += Actor_MoveV;
-    }
-
-    private static bool Actor_MoveV(On.Celeste.Actor.orig_MoveV orig, Actor self, float moveV, Collision onCollide, Solid pusher)
-    {
-        LeapPrawn l = self as LeapPrawn;
-        if (l == null)
-        {
-            return orig(self, moveV, onCollide, pusher);
-        } else if (l.SolidChild != null)
-        {
-            l.SolidChild.Collidable = false;
-            bool result = orig(self, moveV, onCollide, pusher);
-            l.SolidChild.Collidable = true;
-            return result;
-        }
-        return orig(self, moveV, onCollide, pusher);
-    }
-
-    private static bool Actor_MoveH(On.Celeste.Actor.orig_MoveH orig, Actor self, float moveH, Collision onCollide, Solid pusher)
-    {
-        LeapPrawn l = self as LeapPrawn;
-        if (l == null)
-        {
-            return orig(self, moveH, onCollide, pusher);
-        }
-        else if (l.SolidChild != null)
-        {
-            l.SolidChild.Collidable = false;
-            bool result = orig(self, moveH, onCollide, pusher);
-            l.SolidChild.Collidable = true;
-            return result;
-        }
-        return orig(self, moveH, onCollide, pusher);
     }
 
     public static void Unload()
@@ -431,8 +338,6 @@ public class LeapPrawn : Actor
         On.Celeste.Player.SuperJump -= Player_SuperJump;
         On.Celeste.Player.WallJump -= Player_WallJump;
         On.Celeste.Player.SuperWallJump -= Player_SuperWallJump;
-        On.Celeste.Actor.MoveH -= Actor_MoveH;
-        On.Celeste.Actor.MoveV -= Actor_MoveV;
     }
     private static void Player_Jump(On.Celeste.Player.orig_Jump orig, Player self, bool particles, bool playSfx)
     {
