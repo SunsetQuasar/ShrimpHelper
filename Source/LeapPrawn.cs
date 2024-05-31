@@ -1,14 +1,6 @@
 ﻿using Celeste.Mod.ShrimpHelper.Entities;
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Formats.Tar;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using static Celeste.Mod.ShrimpHelper.Entities.StarfishGuy;
-using static Celeste.Spring;
 
 namespace Celeste.Mod.ShrimpHelper;
 
