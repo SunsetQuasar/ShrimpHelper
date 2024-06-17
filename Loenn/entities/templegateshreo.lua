@@ -7,7 +7,8 @@ ShrimpHelperShreoGate.placements = {
     data = {
         width = 8,
         height = 8,
-        ignoreRightShreo = false
+        ignoreRightShreo = false,
+        openByDefault = false
     }
 }
 

@@ -28,6 +28,8 @@ public class ShreoGate : Solid
 
     public bool ignoreShreoToTheRight;
 
+    public bool openByDefault;
+
     public ShreoGate(EntityData data, Vector2 offset) : base(data.Position + offset, data.Width, data.Height, true)
     {
         SurfaceSoundIndex = 11;
@@ -43,6 +45,7 @@ public class ShreoGate : Solid
             dust[i].ageSpeed = Calc.Random.Range(1f, 2f);
         }
         ignoreShreoToTheRight = data.Bool("ignoreRightShreo", false);
+        openByDefault = data.Bool("openByDefault", true);
     }
     public override void Update()
     {
@@ -111,7 +114,7 @@ public class ShreoGate : Solid
             {
                 return Vector2.DistanceSquared(Position + new Vector2(base.Width / 2f, Height / 2), entity.Center) < (open ? 6400f : 4096f);
             }
-        }
+        } else return openByDefault;
         return true;
     }
     private void OnDisplacementRender()
