@@ -25,6 +25,8 @@ public class BonkKrill : Actor
 
     public bool newhits;
 
+    public bool phaseThru;
+
     private ParticleType platformP = new ParticleType
     {
         Acceleration = Vector2.UnitY * 60f,
@@ -57,6 +59,7 @@ public class BonkKrill : Actor
     {
         Add(sprite = ShrimpHelperModule.ShrimpSpriteBank.Create("krill"));
         Collider = new Hitbox(12, 12, -6, -6);
+        phaseThru = data.Bool("walkThrough", false);
         bonkCollider = new Hitbox(16, 12, -8, -8);
         Add(new PlayerCollider(OnPlayerBounce, bonkCollider));
         Add(new PlayerCollider(OnPlayer, new Hitbox(12, 12, -6, -6)));
@@ -398,6 +401,7 @@ public class BonkKrill : Actor
     }
     private void OnPlayer(Player player)
     {
+        if (phaseThru) return;
         player.Die((player.Center - base.Center).SafeNormalize(Vector2.UnitX));
     }
     public override void Render()

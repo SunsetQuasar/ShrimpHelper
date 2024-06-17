@@ -12,7 +12,8 @@ ShrimpHelperBonkKrill.placements = {
         data = {
             alreadyHitOnce = false,
             left = false,
-            moreInteractions = true
+            moreInteractions = true,
+            walkThrough = false
         }
     },
     {
@@ -20,7 +21,8 @@ ShrimpHelperBonkKrill.placements = {
         data = {
             alreadyHitOnce = true,
             left = false,
-            moreInteractions = true
+            moreInteractions = true,
+            walkThrough = false
         }
     },
     {
@@ -28,7 +30,8 @@ ShrimpHelperBonkKrill.placements = {
         data = {
             alreadyHitOnce = true,
             left = true,
-            moreInteractions = true
+            moreInteractions = true,
+            walkThrough = false
         }
     },
     {
@@ -36,7 +39,8 @@ ShrimpHelperBonkKrill.placements = {
         data = {
             alreadyHitOnce = false,
             left = true,
-            moreInteractions = true
+            moreInteractions = true,
+            walkThrough = false
         }
     }
 }
