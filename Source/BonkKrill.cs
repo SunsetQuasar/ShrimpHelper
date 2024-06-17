@@ -389,7 +389,7 @@ public class BonkKrill : Actor
             else
             {
                 sprite.Play("idle_fall");
-                for (int i = 0; i < 24; i++)
+                for (float i = 0; i < 24; i++)
                 {
                     Color col = Calc.HsvToColor(((i / 25) + (timer / 8)) % 1, 0.4f, 1);
                     Vector2 pos = new Vector2(Position.X - 12 + i, Position.Y + (float)Math.Sin((timer * 1.5) + (i / 8)) * 2);
