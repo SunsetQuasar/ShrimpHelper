@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 using Monocle;
 namespace Celeste.Mod.ShrimpHelper.Entities;
 
-[Tracked(false)]
+[Tracked]
 [CustomEntity("ShrimpHelper/Shreo")]
 public class ShreoCrystal : Actor
 {
@@ -49,11 +49,13 @@ public class ShreoCrystal : Actor
 
     private float tutorialTimer;
 
-    private bool antiGrav = false;
+    public bool antiGrav = false;
 
     private bool removeDuplicates;
 
     private bool tutorial;
+
+    private readonly bool killPlayer;
 
     public ShreoCrystal(Vector2 position)
         : base(position)
@@ -74,6 +76,7 @@ public class ShreoCrystal : Actor
         Hold.OnHitSpring = HitSpring;
         Hold.OnHitSpinner = HitSpinner;
         Hold.SpeedGetter = () => Speed;
+        Hold.SpeedSetter = (t) => Speed = t;
         onCollideH = OnCollideH;
         onCollideV = OnCollideV;
         LiftSpeedGraceTime = 0.1f;
@@ -89,6 +92,7 @@ public class ShreoCrystal : Actor
         if (!e.Bool("TagFix", true)) Tag = Tags.TransitionUpdate;
         removeDuplicates = e.Bool("removeDuplicates", true);
         tutorial = e.Bool("tutorial", false);
+        killPlayer = e.Bool("killPlayer", true);
     }
 
     public override void Added(Scene scene)
@@ -533,9 +537,12 @@ public class ShreoCrystal : Actor
     {
         if (!dead)
         {
+            if (killPlayer)
+            {
+                Player entity = Level.Tracker.GetEntity<Player>();
+                entity?.Die(-Vector2.UnitX * (float)entity.Facing);
+            }
             dead = true;
-            Player entity = Level.Tracker.GetEntity<Player>();
-            entity?.Die(-Vector2.UnitX * (float)entity.Facing);
             Audio.Play("event:/char/madeline/death", Position);
             Add(new DeathEffect(Calc.HexToColor("CB8F75"), base.Center - Position));
             visible = false;

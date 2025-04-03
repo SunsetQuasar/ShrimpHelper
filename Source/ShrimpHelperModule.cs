@@ -4,6 +4,7 @@ global using Celeste.Mod.Entities;
 
 using Celeste.Mod.ShrimpHelper.Entities;
 using System;
+using MonoMod.ModInterop;
 
 namespace Celeste.Mod.ShrimpHelper;
 
@@ -40,6 +41,9 @@ public class ShrimpHelperModule : EverestModule
 
     public override void Load()
     {
+
+        typeof(ShrimpHelperExports).ModInterop();
+
         BonkKrill.Load();
         StarfishGuy.Load();
         PlayerExt.Load();

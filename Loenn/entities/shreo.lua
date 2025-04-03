@@ -10,7 +10,8 @@ ShrimpHelperShreoCrystal.placements = {
         texture = "characters/theoCrystal/SC2023/ShrimpHelper/shreo",
         TagFix = true,
         removeDuplicates = true,
-        tutorial = false
+        tutorial = false,
+        killPlayer = true,
     }
 }
 
