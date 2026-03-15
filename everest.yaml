@@ -1,5 +1,5 @@
 - Name: ShrimpHelper
-  Version: 1.2.3
+  Version: 1.2.4
   DLL: bin/ShrimpHelper.dll
   Dependencies:
     - Name: Everest

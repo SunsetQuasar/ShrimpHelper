@@ -72,7 +72,7 @@ public class Sprimp : Entity
     private void OnPlayer(Player player)
     {
 
-        if (player != null && Input.Grab.Check && !grabbed && cooldownTimer <= 0f && player.Stamina > 20)
+        if (player != null && Input.GrabCheck && !grabbed && cooldownTimer <= 0f && player.Stamina > 20)
         {
             grabbed = true;
             sprite.Play("grab");
@@ -89,7 +89,7 @@ public class Sprimp : Entity
             player.DummyAutoAnimate = false;
             Add(new Coroutine(PlayerLaunchRoutine(player)));
         }
-        else if (grabbed && player != null && Input.Grab.Check && Input.Jump.Pressed)
+        else if (grabbed && player != null && Input.GrabCheck && Input.Jump.Pressed)
         {
             player.Jump();
             grabbed = false;
@@ -108,7 +108,7 @@ public class Sprimp : Entity
             player.StateMachine.State = 0;
             cooldownTimer = 0.7f;
         }
-        else if (grabbed && player != null && !Input.Grab.Check)
+        else if (grabbed && player != null && !Input.GrabCheck)
         {
             grabbed = false;
             sprite.Play("idle");
