@@ -23,6 +23,8 @@ public class Sprimp : Entity
     private float cooldownTimer;
     private bool oneUse;
     private float timer;
+
+    private readonly bool legacy;
     public Sprimp(EntityData data, Vector2 offset)
         : base(data.Position + offset)
     {
@@ -36,6 +38,8 @@ public class Sprimp : Entity
         Collider = new Hitbox(32f, 4f, -16f, 12f);
         Add(new PlayerCollider(OnPlayer, Collider));
         Depth = 100;
+
+        legacy = data.Bool("legacyOptionForStupidBabiesThatMapWithBreakingBehaviorThenGetMadWhenItGetsFixed", false);
     }
 
     public override void Update()
@@ -87,6 +91,10 @@ public class Sprimp : Entity
             player.DummyFriction = false;
             player.ForceCameraUpdate = true;
             player.DummyAutoAnimate = false;
+
+            //fix that stupid bug when you jump into a sprimp
+            if (!legacy) player.varJumpTimer = 0f;
+
             Add(new Coroutine(PlayerLaunchRoutine(player)));
         }
         else if (grabbed && player != null && Input.GrabCheck && Input.Jump.Pressed)
@@ -105,15 +113,26 @@ public class Sprimp : Entity
                 Dust.Burst(base.Center + Vector2.UnitX * -2f, -(float)Math.PI / 4f, 4, ParticleTypes.Dust);
             }
             player.Stamina -= 27.5f;
-            player.StateMachine.State = 0;
+            ResetPlayer(player);
             cooldownTimer = 0.7f;
         }
         else if (grabbed && player != null && !Input.GrabCheck)
         {
             grabbed = false;
             sprite.Play("idle");
-            player.StateMachine.State = 0;
+            ResetPlayer(player);
         }
+    }
+
+    private void ResetPlayer(Player player)
+    {
+        player.StateMachine.State = 0;
+        if (legacy) return;
+        player.DummyMaxspeed = true;
+        player.DummyGravity = true;
+        player.DummyFriction = true;
+        player.ForceCameraUpdate = false;
+        player.DummyAutoAnimate = true;
     }
 
     private IEnumerator PlayerLaunchRoutine(Player player)
@@ -138,7 +157,7 @@ public class Sprimp : Entity
         cooldownTimer = 0.7f;
         grabbed = false;
         sprite.Play("idle");
-        player.StateMachine.State = 0;
+        ResetPlayer(player);
 
     }
 
